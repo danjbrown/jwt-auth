@@ -20,19 +20,16 @@ app.post('/authenticate', function(req, res) {
     req.checkBody('username', 'Invalid username').isAlphanumeric();
     req.checkBody('password', 'Invalid password').isAlphanumeric();
 
-    console.log(req.body.username);
-
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
             res.status(400).json({success: false, message: result.array()});
         } else {
-            // validate the user credentials here
+            // check the user credentials here, setting isValid to true/false
             var isValid = true;
-            var user = req.body.username;
 
             if (isValid) {
                 var tokenData = {
-                    username: user
+                    username: req.body.username
                 }
 
                 var jwtToken = jwt.sign(tokenData, jwtSecretKey, {
@@ -51,7 +48,7 @@ app.post('/authenticate', function(req, res) {
 
 // Check if the user is authenticated and return the decoded user data
 app.get('/user', function(req, res) {
-    // check header for authentication token
+    // check header for authorization token
     var jwtToken = (req.headers.authorization || '').split(' ')[1] || '';
 
     if (jwtToken) {
