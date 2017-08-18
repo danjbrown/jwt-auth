@@ -2,14 +2,12 @@ var express 	= require('express');
 var app         = express();
 var bodyParser  = require('body-parser');
 var jwt    		= require('jsonwebtoken');
-var config 		= require('./config');
 
 // JWT secret key
 var jwtSecretKey = 'm~pXVNvmkzLe87=rN19';
 
 // Server config
 var port = process.env.PORT || 8080;
-app.set('jwtSecretKey', config.secret);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -41,8 +39,8 @@ app.post('/authenticate', function(req, res) {
 	}
 });
 
-// Check if the user is authenticated
-app.get('/is-authenticated', function(req, res) {
+// Check if the user is authenticated and return the decoded user data
+app.get('/user', function(req, res) {
 	// check header for authentication token
 	var jwtToken = (req.headers.authorization || '').split(' ')[1] || '';
 

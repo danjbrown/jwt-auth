@@ -1,6 +1,6 @@
 # JWT Authentication
 
-A basic example of JWT authentication with Node.js and Express. Uses nodemon to automatically restart the server when code changes are saved.
+A basic example of JWT authentication server using Node.js and Express, this could be used to authenticate users in Angular2 applications. Uses nodemon to automatically restart the server when code changes are saved.
 
 ## Usage
 
@@ -24,9 +24,9 @@ Create a POST request to http://localhost:8080/authenticate
 
 Copy the token from the token property of the JSON response.
 
-### Verifying a token an retrieve the user data
+### Verify a token and retrieve the user data
 
-Create a GET request to http://localhost:8080/is-authenticated passing the token copied above in the header parameter Authorization.
+Create a GET request to http://localhost:8080/user passing the token copied above in the header parameter Authorization with type Bearer: ```Bearer token```
 
 You should see a JSON response like this, or an error message:
 
