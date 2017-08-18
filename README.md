@@ -1,6 +1,6 @@
 # JWT Authentication
 
-A basic example of JWT authentication server using Node.js and Express, this could be used to authenticate users in Angular2 applications. Uses nodemon to automatically restart the server when code changes are saved.
+A simple JWT authentication server using Node.js and Express, this could be used to authenticate users in Angular2 applications. Uses nodemon to automatically restart the server when code changes are saved.
 
 ## Usage
 
