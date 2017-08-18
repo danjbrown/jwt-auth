@@ -24,5 +24,19 @@ describe('JWT Authentication Service', () => {
             });
         });
     });
+
+    // Test the user route
+    describe('/GET user', () => {
+        it('it should get a user', (done) => {
+            chai.request(server)
+            .get('/user')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({username: 'test', password: 'test'})
+            .end((err, res) => {
+                res.should.have.status(400);
+                done();
+            });
+        });
+    });
 });
   
