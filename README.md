@@ -4,11 +4,11 @@ A basic example of JWT authentication with Node.js and Express. Uses nodemon to 
 
 ## Usage
 
-1. Clone the repo: `git clone git@github.com:scotch-io/node-token-authentication`
-2. Install dependencies: `npm install`
+1. Clone the repository
+2. Install the dependencies `npm install`
 3. Change the jwtSecretKey in `server.js`
 4. Add an authentication method as required, for example from a database
-5. Start the server: `nodemon server.js`
+5. Start the server `nodemon server.js`
 6. Make web service requests as described below; you could use Postman to experiment.
 
 ### Authenticate the user, create and return a JWT token
