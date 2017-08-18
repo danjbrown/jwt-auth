@@ -26,7 +26,7 @@ Copy the token from the token property of the JSON response.
 
 ### Verify a token and retrieve the user data
 
-Create a GET request to http://localhost:8080/user passing the token copied above in the header parameter Authorization with type Bearer: ```Bearer token```
+Create a GET request to http://localhost:8080/user passing the token copied above in the header parameter Authorization with type Bearer: ```Bearer <copied_token>```
 
 You should see a JSON response like this, or an error message:
 

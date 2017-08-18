@@ -2,7 +2,7 @@ var express 			= require('express');
 var app         		= express();
 var bodyParser  		= require('body-parser');
 var jwt    				= require('jsonwebtoken');
-var expressValidator    = require('express-validator');
+var expressValidator  	= require('express-validator');
 
 // JWT secret key
 var jwtSecretKey = 'm~pXVNvmkzLe87=rN19';
@@ -23,10 +23,6 @@ app.post('/authenticate', function(req, res) {
 	var errors = req.validationErrors();
 	if (errors) {
 		res.status(400).json({success: false, message: errors});
-	}
-	
-	if (!req.body.username || !req.body.password) {
-		res.status(400).json({success: false, message: 'Empty credentials'});
 	}
 
 	// validate the user credentials here
