@@ -1,6 +1,8 @@
 # JWT Authentication
 
-A simple JWT authentication server using Node.js and Express, this could be used to authenticate users in Angular2 applications. Uses nodemon to automatically restart the server when code changes are saved and sample Chai/Mocha tests.
+A simple JWT authentication server using Node.js and Express, this could be used to authenticate users in Angular2 applications.
+Uses nodemon to automatically restart the server when code changes are saved.
+Includes sample Mocha and Chai tests.
 
 ## Usage
 
