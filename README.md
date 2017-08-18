@@ -13,7 +13,7 @@ A basic example of JWT authentication with Node.js and Express. Uses nodemon to 
 
 ### Authenticate the user, create and return a JWT token
 
-Create a POST request to http://localhost:8080/api/authenticate
+Create a POST request to http://localhost:8080/authenticate
 
 ```
   {
