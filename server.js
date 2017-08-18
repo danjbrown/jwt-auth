@@ -17,13 +17,14 @@ app.use(expressValidator());
 // Authenticate the user and return the JWT token
 app.post('/authenticate', function(req, res) {
     // validate input
-    req.assert('username', 'Invalid username').isAlphanumeric();
-    req.assert('password', 'Invalid password').isAlphanumeric();
+    req.checkBody('username', 'Invalid username').isAlphanumeric();
+    req.checkBody('password', 'Invalid password').isAlphanumeric();
+
+    console.log(req.body.username);
 
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
             res.status(400).json({success: false, message: result.array()});
-            return;
         } else {
             // validate the user credentials here
             var isValid = true;
@@ -69,3 +70,5 @@ app.get('/user', function(req, res) {
 
 app.listen(port);
 console.log('JWT auth server running at http://localhost:' + port);
+
+module.exports = app; // for testing
