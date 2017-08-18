@@ -1,7 +1,8 @@
-var express 	= require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var jwt    		= require('jsonwebtoken');
+var express 			= require('express');
+var app         		= express();
+var bodyParser  		= require('body-parser');
+var jwt    				= require('jsonwebtoken');
+var expressValidator    = require('express-validator');
 
 // JWT secret key
 var jwtSecretKey = 'm~pXVNvmkzLe87=rN19';
@@ -11,9 +12,19 @@ var port = process.env.PORT || 8080;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(expressValidator());
 
 // Authenticate the user and return the JWT token
 app.post('/authenticate', function(req, res) {
+	// validate input
+	req.checkBody('username', 'Invalid username').isAlphanumeric();
+	req.checkBody('password', 'Invalid password').isAlphanumeric();
+
+	var errors = req.validationErrors();
+	if (errors) {
+		res.status(400).json({success: false, message: errors});
+	}
+	
 	if (!req.body.username || !req.body.password) {
 		res.status(400).json({success: false, message: 'Empty credentials'});
 	}
