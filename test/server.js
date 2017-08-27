@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 
 describe('JWT Authentication Service', () => {
     // Test the authenticate route
-    describe('/POST authenticate', () => {
+    describe('POST /authenticate', () => {
         it('it should authenticate a user', (done) => {
             chai.request(server)
             .post('/authenticate')
@@ -26,7 +26,7 @@ describe('JWT Authentication Service', () => {
     });
 
     // Test the user route
-    describe('/GET user', () => {
+    describe('GET /user', () => {
         it('it should fail to get a user', (done) => {
             chai.request(server)
             .get('/user')

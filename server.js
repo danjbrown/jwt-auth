@@ -41,6 +41,8 @@ app.post('/authenticate', function(req, res) {
                     message: 'User authenticated',
                     token: jwtToken
                 });
+            } else {
+                res.status(400).json({success: false, message: 'Invalid login'});
             }
         }
     });
