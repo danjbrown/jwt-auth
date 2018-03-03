@@ -9,17 +9,16 @@ chai.use(chaiHttp);
 describe('JWT Authentication Service', () => {
     // Test the authenticate route
     describe('POST /authenticate', () => {
-        it('it should authenticate a user', (done) => {
+        it('it should fail to authenticate a user', (done) => {
             chai.request(server)
             .post('/authenticate')
             .set('content-type', 'application/x-www-form-urlencoded')
             .send({username: 'test', password: 'test'})
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(400);
                 res.body.should.be.a('object');
-                res.body.should.have.property('success', true);
-                res.body.should.have.property('message', 'User authenticated');
-                res.body.should.have.property('token');
+                res.body.should.have.property('success', false);
+                res.body.should.have.property('message', 'Invalid login');
                 done();
             });
         });

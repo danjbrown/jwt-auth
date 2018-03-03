@@ -1,6 +1,7 @@
 # JWT Authentication
 
 A simple JWT authentication server built using Node.js and Express, it could be used to authenticate users in Angular2 applications.
+Demonstrates a very basic example of authentication against users stored in a MongoDB; this will be extended.
 Uses nodemon to automatically restart the server when code changes are saved.
 Includes sample tests written using Mocha and Chai.
 
@@ -13,6 +14,16 @@ Includes sample tests written using Mocha and Chai.
 5. Start the server `nodemon server.js`
 6. Make web service requests as described below; you could use Postman to experiment.
 5. Run the tests `npm run test`
+
+### MongoDB
+The authenticate service assumes that a MongoDB is available with a collection containing a JSON document per user with at least these properties:
+
+```
+  {
+    user: 'username',
+    password: 'MD5 password'
+  }
+```
 
 ### Authenticate the user, create and return a JWT token
 

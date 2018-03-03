@@ -1,14 +1,20 @@
-var express 			= require('express');
-var app         		= express();
-var bodyParser  		= require('body-parser');
-var jwt    				= require('jsonwebtoken');
-var expressValidator  	= require('express-validator');
+const express 			= require('express');
+const app         		= express();
+const bodyParser  		= require('body-parser');
+const jwt    			= require('jsonwebtoken');
+const expressValidator  = require('express-validator');
+const mongoClient       = require('mongodb').MongoClient;
+const assert            = require('assert');
+const crypto            = require('crypto');
 
-// JWT secret key
-var jwtSecretKey = 'm~pXVNvmkzLe87=rN19';
+// Constants
+const jwtSecretKey          = 'm~pXVNvmkzLe87=rN19';
+const databaseUrl           = 'mongodb://localhost:27017';
+const databaseName          = 'myProject';
+const databaseCollection    = 'users';
 
 // Server config
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -24,26 +30,34 @@ app.post('/authenticate', function(req, res) {
         if (!result.isEmpty()) {
             res.status(400).json({success: false, message: result.array()});
         } else {
-            // check the user credentials here, setting isValid to true/false
-            var isValid = true;
-
-            if (isValid) {
-                var tokenData = {
-                    username: req.body.username
-                }
-
-                var jwtToken = jwt.sign(tokenData, jwtSecretKey, {
-                    expiresIn: 3600
+            // Connect to the MongoDB and authenticate the user
+            mongoClient.connect(databaseUrl, function(err, client) {
+                assert.equal(null, err);
+                const db = client.db(databaseName);
+                const collection = db.collection(databaseCollection);
+                const md5Password = crypto.createHash('md5').update(req.body.password).digest("hex");
+                collection.find({user: req.body.username, password: md5Password}).toArray(function(err, docs) {
+                    assert.equal(err, null);
+                    if (docs.length === 1) {
+                        const tokenData = {
+                            username: req.body.username
+                        }
+        
+                        const jwtToken = jwt.sign(tokenData, jwtSecretKey, {
+                            expiresIn: 3600
+                        });
+        
+                        res.status(200).json({
+                            success: true,
+                            message: 'User authenticated',
+                            token: jwtToken
+                        });
+                    } else {
+                        res.status(400).json({success: false, message: 'Invalid login'});
+                    }
                 });
-
-                res.status(200).json({
-                    success: true,
-                    message: 'User authenticated',
-                    token: jwtToken
-                });
-            } else {
-                res.status(400).json({success: false, message: 'Invalid login'});
-            }
+                client.close();
+            });
         }
     });
 });
@@ -51,7 +65,7 @@ app.post('/authenticate', function(req, res) {
 // Check if the user is authenticated and return the decoded user data
 app.get('/user', function(req, res) {
     // check header for authorization token
-    var jwtToken = (req.headers.authorization || '').split(' ')[1] || '';
+    const jwtToken = (req.headers.authorization || '').split(' ')[1] || '';
 
     if (jwtToken) {
         jwt.verify(jwtToken, jwtSecretKey, function(err, decoded) {			
