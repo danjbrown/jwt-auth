@@ -31,7 +31,7 @@ Create a POST request to http://localhost:8080/authenticate with a request body 
 
 ```
   {
-    name: 'Test User',
+    username: 'Test User',
     password: 'password'
   }
 ```
