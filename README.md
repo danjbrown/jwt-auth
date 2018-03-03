@@ -16,7 +16,7 @@ Includes sample tests written using Mocha and Chai.
 5. Run the tests `npm run test`
 
 ### MongoDB
-The authenticate service assumes that a MongoDB is available with a collection containing a JSON document per user with at least these properties:
+The authenticate service assumes that a MongoDB is available with a collection containing one JSON document per user with these properties:
 
 ```
   {
