@@ -33,7 +33,7 @@ app.post('/authenticate', function(req, res) {
             const mongoDatabase = new mongoDB(databaseUrl, databaseName, databaseCollection);
             return mongoDatabase.connect().then(() => {
                 const md5Password = crypto.createHash('md5').update(req.body.password).digest("hex");
-                return mongoDatabase.getUser(req.body.username, md5Password);
+                return mongoDatabase.findUser(req.body.username, md5Password);
             }).then((user) => {
                 if (user.length === 1) {
                     const tokenData = {
