@@ -3,15 +3,14 @@ const app         		= express();
 const bodyParser  		= require('body-parser');
 const jwt    			= require('jsonwebtoken');
 const expressValidator  = require('express-validator');
-const mongoClient       = require('mongodb').MongoClient;
-const assert            = require('assert');
+const mongoDB           = require('./mongodb');
 const crypto            = require('crypto');
 
 // Constants
 const jwtSecretKey          = 'm~pXVNvmkzLe87=rN19';
 const databaseUrl           = 'mongodb://localhost:27017';
-const databaseName          = 'myProject';
-const databaseCollection    = 'users';
+const database              = 'myProject';
+const collection            = 'users';
 
 // Server config
 const port = process.env.PORT || 8080;
@@ -31,22 +30,19 @@ app.post('/authenticate', function(req, res) {
             res.status(400).json({success: false, message: result.array()});
         } else {
             // Connect to the MongoDB and authenticate the user
-            mongoClient.connect(databaseUrl, function(err, client) {
-                assert.equal(null, err);
-                const db = client.db(databaseName);
-                const collection = db.collection(databaseCollection);
+            const mongoDatabase = new mongoDB(databaseUrl, database, collection);
+            mongoDatabase.connect().then(() => {
                 const md5Password = crypto.createHash('md5').update(req.body.password).digest("hex");
-                collection.find({user: req.body.username, password: md5Password}).toArray(function(err, docs) {
-                    assert.equal(err, null);
-                    if (docs.length === 1) {
+                mongoDatabase.getUser(req.body.username, md5Password).then((user) => {
+                    if (user.length === 1) {
                         const tokenData = {
                             username: req.body.username
                         }
-        
+
                         const jwtToken = jwt.sign(tokenData, jwtSecretKey, {
                             expiresIn: 3600
                         });
-        
+
                         res.status(200).json({
                             success: true,
                             message: 'User authenticated',
@@ -56,7 +52,6 @@ app.post('/authenticate', function(req, res) {
                         res.status(400).json({success: false, message: 'Invalid login'});
                     }
                 });
-                client.close();
             });
         }
     });
