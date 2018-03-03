@@ -9,8 +9,8 @@ const crypto            = require('crypto');
 // Constants
 const jwtSecretKey          = 'm~pXVNvmkzLe87=rN19';
 const databaseUrl           = 'mongodb://localhost:27017';
-const database              = 'myProject';
-const collection            = 'users';
+const databaseName          = 'myProject';
+const databaseCollection    = 'users';
 
 // Server config
 const port = process.env.PORT || 8080;
@@ -30,28 +30,31 @@ app.post('/authenticate', function(req, res) {
             res.status(400).json({success: false, message: result.array()});
         } else {
             // Connect to the MongoDB and authenticate the user
-            const mongoDatabase = new mongoDB(databaseUrl, database, collection);
-            mongoDatabase.connect().then(() => {
+            const mongoDatabase = new mongoDB(databaseUrl, databaseName, databaseCollection);
+            return mongoDatabase.connect().then(() => {
                 const md5Password = crypto.createHash('md5').update(req.body.password).digest("hex");
-                mongoDatabase.getUser(req.body.username, md5Password).then((user) => {
-                    if (user.length === 1) {
-                        const tokenData = {
-                            username: req.body.username
-                        }
-
-                        const jwtToken = jwt.sign(tokenData, jwtSecretKey, {
-                            expiresIn: 3600
-                        });
-
-                        res.status(200).json({
-                            success: true,
-                            message: 'User authenticated',
-                            token: jwtToken
-                        });
-                    } else {
-                        res.status(400).json({success: false, message: 'Invalid login'});
+                return mongoDatabase.getUser(req.body.username, md5Password);
+            }).then((user) => {
+                if (user.length === 1) {
+                    const tokenData = {
+                        username: req.body.username
                     }
-                });
+
+                    const jwtToken = jwt.sign(tokenData, jwtSecretKey, {
+                        expiresIn: 3600
+                    });
+
+                    res.status(200).json({
+                        success: true,
+                        message: 'User authenticated',
+                        token: jwtToken
+                    });
+                    Promise.resolve();
+                }
+                return Promise.reject();
+            }).catch((error) => {
+                console.error(error);
+                res.status(400).json({success: false, message: 'Invalid login'});
             });
         }
     });

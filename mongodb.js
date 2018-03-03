@@ -29,6 +29,9 @@ class MongoDB {
     getUser(user, password) {
         return new Promise((resolve, reject) => {
             this.db.collection(this.collection).find({user: user, password: password}).toArray((err, docs) => {
+                if (err) {
+                    reject(err);
+                }
                 assert.equal(err, null);
                 resolve(docs);
             });
